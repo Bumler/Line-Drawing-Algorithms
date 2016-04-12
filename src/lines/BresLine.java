@@ -74,7 +74,7 @@ public class BresLine {
 			}	
 			}
 			else {
-				while (y < y2) {
+				while (x < x2) {
 					if (Pk < 0) {
 						y++;
 						g2d.drawOval(x, y, 1, 1);
