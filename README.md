@@ -1,2 +1,2 @@
 # Line-Drawing-Algorithms
-Studying a recreating fundamental line drawing algorithms
+Studying and recreating fundamental line drawing algorithms
