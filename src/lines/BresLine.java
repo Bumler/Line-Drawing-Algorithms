@@ -10,21 +10,35 @@ public class BresLine {
 	int y1;
 	int x2;
 	int y2;
+	int deltaX;
+	int deltaY;
 	
 	public BresLine (int x1, int y1, int x2, int y2){
 		//makes sure that x1 is less than x2
-		if (x1 > x2){
-			this.x1 = x2;
-			this.y1 = y2;
-			this.x2 = x1;
-			this.y2 = y1;
-		}
-		else{
 			this.x1 = x1;
 			this.y1 = y1;
 			this.x2 = x2;
 			this.y2 = y2;
-		}
+			
+			//we need to organize our points by comparing the delta X and Y
+			deltaX = x2 - x1;
+			deltaY = y2 - y1;
+			if (deltaX < deltaY){
+				if (x1 > x2){
+					this.x1 = x2;
+					this.y1 = y2;
+					this.x2 = x1;
+					this.y2 = y1;
+				}
+			}
+			else if (deltaY < deltaX){
+				if (y1 > y2){
+					this.x1 = x2;
+					this.y1 = y2;
+					this.x2 = x1;
+					this.y2 = y1;
+				}
+			}
 	}
 	
 	//http://stackoverflow.com/questions/9970281/java-calculating-the-angle-between-two-points-in-degrees
@@ -40,12 +54,11 @@ public class BresLine {
 		//plot our starting point
 		g2d.drawOval(x1, y1, 1, 1);
 		
-			int deltaX = x2 - x1;
-			int deltaY = (y2 - y1);
 			// this is our initial parameter
 			// 2deltay - deltaX
 			
 			int Pk;
+			//we may need to recalculate the delta x and y
 			
 			if (getAngle() < 90)
 				Pk = (2*deltaY) - deltaX;
@@ -74,7 +87,7 @@ public class BresLine {
 			}	
 			}
 			else {
-				while (x < x2) {
+				while (y < y2) {
 					if (Pk < 0) {
 						y++;
 						g2d.drawOval(x, y, 1, 1);
