@@ -3,6 +3,7 @@ package lines;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -21,8 +22,9 @@ public class frame extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField textField;
-	private graphicsPanel panel_1 = new graphicsPanel();
+	private graphicsPanel panel_1 = new graphicsPanel(this);
 	int mode = -1;
+	double steps = .01;
 
 	/**
 	 * Launch the application.
@@ -62,10 +64,18 @@ public class frame extends JFrame {
 		JLabel lblMode = new JLabel("Step Size");
 		btnPanel.add(lblMode);
 		
-		textField = new JTextField();
+		textField = new JTextField(".01");
 		btnPanel.add(textField);
 		textField.setColumns(10);
+		textField.addActionListener(new ActionListener(){
+			public void actionPerformed (ActionEvent arg0){
+				steps = Double.parseDouble(textField.getText());
+		}
+		});
 		
+		JLabel label = new JLabel("Press enter to input new steps");
+		label.setFont(new Font("Serif", Font.PLAIN, 10));
+		btnPanel.add(label);
 		
 		//creates a group of radio buttons for the three line types
 		ButtonGroup group = new ButtonGroup();
@@ -117,5 +127,8 @@ public class frame extends JFrame {
 	public int getMode(){
 		return mode;
 	}
-
+	
+	public double getSteps(){
+		return steps;
+	}
 }

@@ -17,16 +17,19 @@ public class graphicsPanel extends JPanel {
 	int mode = -1;
 	int count = 0;
 	int x1, y1;
+	frame frame = null;
 	
 	//we will create three array lists one for each line type
+	ArrayList<ParametricLine> parametricList = new ArrayList<ParametricLine>();
+	ArrayList<BresLine> bresenhamList = new ArrayList<BresLine>();
 	ArrayList<APILine> apiList = new ArrayList<APILine>();
-	public graphicsPanel() {
+	public graphicsPanel(frame f) {
+		this.frame = f;
 		this.addMouseListener(new MouseListener(){
-		
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				// TODO Auto-generated method stub
-				
+				System.out.println("CLICK");
 					int x = e.getX();
 					int y = e.getY();
 				if (e.getButton() == MouseEvent.BUTTON1) {
@@ -70,19 +73,29 @@ public class graphicsPanel extends JPanel {
 		switch (mode){
 		case -1: 
 			break;
+		
+		//Parametric
 		case 0:
+			ParametricLine pline = new ParametricLine (x1,y1,x2,y2,frame.getSteps());
+			parametricList.add(pline);
 			break;
+			
+		//Brasenham's
 		case 1:
+			BresLine bLine = new BresLine (x1,y1,x2,y2);
+			bresenhamList.add(bLine);
 			break;
+			
+		//API
 		case 2:
-			APILine line = new APILine(x1,y1,x2,y2);
-			apiList.add(line);
+			APILine aline = new APILine(x1,y1,x2,y2);
+			apiList.add(aline);
 			break;
 		}
 	}
 	
 	//sets the mode that chooses what type of line will be drawn
-	//0 = parametric, 1 = bresenheims, 2 = API
+	//0 = parametric, 1 = Bresenham's, 2 = API
 	//by default mode is -1
 	public void setMode(int modeIN){
 		mode = modeIN;
@@ -93,6 +106,12 @@ public class graphicsPanel extends JPanel {
 	public void paint (Graphics g){
 		super.paint(g);
 		Graphics2D g2d = (Graphics2D)g;
+		for (ParametricLine l : parametricList){
+			l.render(g2d);
+		}
+		for (BresLine l : bresenhamList){
+			l.render(g2d);
+		}
 		for (APILine l: apiList){
 			l.render(g2d);
 		}
@@ -100,6 +119,8 @@ public class graphicsPanel extends JPanel {
 
 	//clears each array list
 	public void erase() {
+		parametricList = new ArrayList<ParametricLine>();
+		bresenhamList = new ArrayList<BresLine>();
 		apiList = new ArrayList<APILine>();
 		repaint();
 	}
