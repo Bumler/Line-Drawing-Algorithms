@@ -18,6 +18,8 @@ public class graphicsPanel extends JPanel {
 	int count = 0;
 	int x1, y1;
 	frame frame = null;
+	boolean first = true;
+	int frameBuff[][];
 	
 	//we will create three array lists one for each line type
 	ArrayList<ParametricLine> parametricList = new ArrayList<ParametricLine>();
@@ -105,12 +107,19 @@ public class graphicsPanel extends JPanel {
 	//paint goes through each array list rendering all the lines
 	public void paint (Graphics g){
 		super.paint(g);
+		
+		if(first){
+			frameBuff = new int[this.getHeight()][this.getWidth()];
+			first = false;
+		}
+		
 		Graphics2D g2d = (Graphics2D)g;
 		for (ParametricLine l : parametricList){
 			l.render(g2d);
 		}
 		for (BresLine l : bresenhamList){
 			l.render(g2d);
+			l.render(frameBuff, g2d);
 		}
 		for (APILine l: apiList){
 			l.render(g2d);
