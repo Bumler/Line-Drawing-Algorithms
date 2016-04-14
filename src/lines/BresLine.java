@@ -12,6 +12,7 @@ public class BresLine {
 	int y2;
 	int deltaX;
 	int deltaY;
+	int Pk;
 	
 	boolean yAlg = false;
 	boolean xAlg = false;
@@ -30,6 +31,7 @@ public class BresLine {
 			deltaX = Math.abs(x2 - x1);
 			deltaY = Math.abs(y2 - y1);
 			if (deltaX < deltaY){
+				//once we compare our delta values we need to order our points
 				yAlg = true;
 				if (this.y1 > this.y2){
 					this.x1 = x2;
@@ -48,22 +50,25 @@ public class BresLine {
 				}
 			}
 			
+			//the big Y first allowed us to plot points on the graphs 1st and 3rd quadrant
+			//the big X first allows to plot points between 45 and 90 deg on the 3rd and 4th quadrant
+			//assuming your looking at a standard graph
+			//this may not be the most optimal fix and could be inefficient
 			if (this.y1-this.y2 > 0){
 				bigYfirst = true;
 			}
 			if (this.x1-this.x2 > 0){
 				bigXfirst = true;
 			}
-
-			System.out.println ("X1: "+this.x1+ " Y1: "+this.y1+" X2: "+this.x2+" Y2: "+this.y2);
-			System.out.println ("XAlg: " +xAlg+ " YAlg: "+yAlg);
-			getAngle();
-	}
-	
-	//http://stackoverflow.com/questions/9970281/java-calculating-the-angle-between-two-points-in-degrees
-	public float getAngle() {
-		System.out.println(Math.toDegrees(Math.atan2(x2 - x1, y2 - y1)));
-	    return (float) Math.toDegrees(Math.atan2(x2 - x1, y2 - y1));
+			
+			// this is our initial parameter
+			// 2deltay - deltaX
+			if (xAlg) {Pk = (2*deltaY) - deltaX;}
+			else {Pk = (2*deltaX) - deltaY;}
+			
+			//deltaX and Y are best stored like this
+			deltaX *= 2;
+			deltaY *= 2;
 	}
 	
 	//https://www.youtube.com/watch?v=TRbwu17oAYY
@@ -71,22 +76,12 @@ public class BresLine {
 	public void render (Graphics2D g2d){
 		g2d.setColor(Color.RED);
 		//plot our starting point
-		g2d.drawOval(x1, y1, 5, 5);
-		
-			// this is our initial parameter
-			// 2deltay - deltaX
-			
-			int Pk;
-			//we may need to recalculate the delta x and y
-
-			if (xAlg) {Pk = (2*deltaY) - deltaX;}
-			else {Pk = (2*deltaX) - deltaY;}
-			
-			deltaX *= 2;
-			deltaY *= 2;
+		g2d.drawOval(x1, y1, 1, 1);
 			
 			int x = x1;
 			int y = y1;
+			//when the y is larger in front only the x version of the algorithm is possible
+			//after that we have a few more if statements to cover every other possible algorithm
 			if (bigYfirst){
 				if (xAlg){
 					while (x < x2) {
@@ -101,20 +96,6 @@ public class BresLine {
 							Pk = Pk + deltaY - deltaX;
 						}
 					}	
-					}
-				else {
-					while (y < y2) {
-						if (Pk < 0) {
-							y++;
-							g2d.drawOval(x, y, 1, 1);
-							Pk = Pk + deltaX;
-						} else {
-							x--;
-							y++;
-							g2d.drawOval(x, y, 1, 1);
-							Pk = Pk + deltaX - deltaY;
-						}
-						}	
 					}
 				}
 			else{
